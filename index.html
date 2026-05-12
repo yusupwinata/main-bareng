@@ -1,422 +1,433 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Heart, 
-  Play, 
-  ChevronLeft, 
-  ChevronRight, 
-  Trophy, 
-  Target,
-  Github,
-  Mail,
-  Menu,
-  X,
-  Gamepad2
-} from 'lucide-react';
-
-// --- DATA PERMAINAN ---
-const gamesData = [
-  {
-    id: 1,
-    title: 'Congklak',
-    desc: 'Permainan strategi klasik untuk mengumpulkan biji terbanyak di lumbungmu.',
-    url: 'https://yusupwinata.github.io/congklak-the-game/',
-    img: 'https://www.ibudanbalita.com/uploads/medias/CDLlhopzroUY.jpg',
-    icon: <Target className="w-5 h-5" />
-  },
-  {
-    id: 2,
-    title: 'Bekel',
-    desc: 'Latih refleks dan timing dengan permainan bola bekel dan biji kuningan.',
-    url: 'https://yusupwinata.github.io/bekel-the-game/',
-    img: 'https://i.ytimg.com/vi/cWEd7NdBZ_s/maxresdefault.jpg',
-    icon: <Play className="w-5 h-5" />
-  },
-  {
-    id: 3,
-    title: 'Karambol',
-    desc: 'Masukkan bidak ke lubang dengan akurasi dan perhitungan pantulan terbaik.',
-    url: 'https://yusupwinata.github.io/karambol-the-game/',
-    img: 'https://asset.kompas.com/crops/5ydCiu77cg0CgPLsO7IeuzT-nWg=/106x0:1258x768/1200x800/data/photo/2022/06/24/62b567e6ccd57.png',
-    icon: <Target className="w-5 h-5" />
-  },
-  {
-    id: 4,
-    title: 'Damdaman',
-    desc: 'Permainan strategi tradisional penuh taktik ala catur lokal Indonesia.',
-    url: 'https://yusupwinata.github.io/damdaman-the-game/',
-    img: 'https://tgrcampaign.com/media_library/posts/large/fbe8695a5b67c6a4be6fd1a4f60e0693.jpeg',
-    icon: <Trophy className="w-5 h-5" />
-  }
-];
-
-export default function App() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Handle scroll for navbar styling
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Smooth scroll functionality
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const navHeight = 80; // Approximate navbar height
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navHeight;
-  
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
-  // Carousel Controls
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % gamesData.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + gamesData.length) % gamesData.length);
-  };
-
-  return (
-    <div className="font-nunito bg-[#F5E6C8] text-[#4A3B32] min-h-screen selection:bg-[#E39B4A] selection:text-white overflow-x-hidden">
-      {/* Injecting Custom Fonts & Styles */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
-        .font-nunito { font-family: 'Nunito', sans-serif; }
-        html { scroll-behavior: smooth; }
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MainBareng - Permainan Tradisional</title>
+    
+    <!-- Google Fonts: Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#F5E6C8',
+                        brown: '#8B5E3C',
+                        green: '#3E5C4A',
+                        orange: '#E39B4A',
+                    },
+                    fontFamily: {
+                        nunito: ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}} />
+    </style>
+</head>
+<body class="bg-cream text-[#4A3B32] min-h-screen selection:bg-orange selection:text-white overflow-x-hidden">
 
-      {/* --- NAVBAR --- */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-[#F5E6C8]/90 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'}`}>
-        <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
-          {/* Logo */}
-          <div 
-            className="flex items-center gap-2 cursor-pointer group"
-            onClick={() => scrollToSection('home')}
-          >
-            <div className="bg-[#E39B4A] p-2 rounded-xl group-hover:rotate-12 transition-transform">
-              <Gamepad2 className="text-white w-6 h-6" />
+    <!-- --- NAVBAR --- -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-5">
+        <div class="container mx-auto px-6 md:px-12 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#home" class="flex items-center gap-2 cursor-pointer group">
+                <div class="bg-orange p-2 rounded-xl group-hover:rotate-12 transition-transform">
+                    <svg class="text-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-green leading-none tracking-tight">MainBareng</h1>
+                    <p class="text-[10px] font-bold text-brown uppercase tracking-wider">Permainan Tradisional</p>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8 font-bold text-brown">
+                <a href="#home" class="hover:text-orange transition-colors relative group">
+                    Home
+                    <span class="absolute -bottom-1 left-0 w-0 h-1 bg-orange transition-all group-hover:w-full rounded-full"></span>
+                </a>
+                <a href="#games" class="hover:text-orange transition-colors relative group">
+                    Games
+                    <span class="absolute -bottom-1 left-0 w-0 h-1 bg-orange transition-all group-hover:w-full rounded-full"></span>
+                </a>
+                <a href="#about" class="hover:text-orange transition-colors relative group">
+                    About
+                    <span class="absolute -bottom-1 left-0 w-0 h-1 bg-orange transition-all group-hover:w-full rounded-full"></span>
+                </a>
             </div>
-            <div>
-              <h1 className="text-2xl font-black text-[#3E5C4A] leading-none tracking-tight">MainBareng</h1>
-              <p className="text-[10px] font-bold text-[#8B5E3C] uppercase tracking-wider">Permainan Tradisional</p>
-            </div>
-          </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8 font-bold text-[#8B5E3C]">
-            <button onClick={() => scrollToSection('home')} className="hover:text-[#E39B4A] transition-colors relative group">
-              Home
-              <span className="absolute -bottom-1 left-0 w-0 h-1 bg-[#E39B4A] transition-all group-hover:w-full rounded-full"></span>
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden text-green p-2">
+                <svg id="icon-menu" class="w-7 h-7 block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                <svg id="icon-close" class="w-7 h-7 hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
-            <button onClick={() => scrollToSection('games')} className="hover:text-[#E39B4A] transition-colors relative group">
-              Games
-              <span className="absolute -bottom-1 left-0 w-0 h-1 bg-[#E39B4A] transition-all group-hover:w-full rounded-full"></span>
-            </button>
-            <button onClick={() => scrollToSection('about')} className="hover:text-[#E39B4A] transition-colors relative group">
-              About
-              <span className="absolute -bottom-1 left-0 w-0 h-1 bg-[#E39B4A] transition-all group-hover:w-full rounded-full"></span>
-            </button>
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <button 
-            className="md:hidden text-[#3E5C4A] p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-          </button>
         </div>
 
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-[#F5E6C8] shadow-lg border-t border-[#8B5E3C]/10 flex flex-col py-4 px-6 gap-4 font-bold text-center text-[#8B5E3C]">
-            <button onClick={() => scrollToSection('home')} className="py-2 hover:bg-[#E39B4A]/10 rounded-lg">Home</button>
-            <button onClick={() => scrollToSection('games')} className="py-2 hover:bg-[#E39B4A]/10 rounded-lg">Games</button>
-            <button onClick={() => scrollToSection('about')} className="py-2 hover:bg-[#E39B4A]/10 rounded-lg">About</button>
-          </div>
-        )}
-      </nav>
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-cream shadow-lg border-t border-brown/10 flex flex-col py-4 px-6 gap-4 font-bold text-center text-brown">
+            <a href="#home" class="mobile-link py-2 hover:bg-orange/10 rounded-lg">Home</a>
+            <a href="#games" class="mobile-link py-2 hover:bg-orange/10 rounded-lg">Games</a>
+            <a href="#about" class="mobile-link py-2 hover:bg-orange/10 rounded-lg">About</a>
+        </div>
+    </nav>
 
-      {/* --- HERO SECTION --- */}
-      <section id="home" className="pt-32 pb-20 md:pt-40 md:pb-32 container mx-auto px-6 md:px-12 flex flex-col-reverse md:flex-row items-center gap-12">
-        
-        {/* Left Content */}
-        <div className="w-full md:w-1/2 flex flex-col items-start gap-6">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#E39B4A]/20 text-[#E39B4A] rounded-full font-bold text-sm">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E39B4A] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#E39B4A]"></span>
-            </span>
-            Mainkan Secara Gratis!
-          </div>
-          
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#3E5C4A] leading-tight">
-            Permainan Tradisional <br className="hidden lg:block"/>
-            <span className="text-[#8B5E3C]">dalam Bentuk Digital</span>
-          </h2>
-          
-          <p className="text-lg text-[#8B5E3C] font-semibold md:w-5/6 leading-relaxed">
-            Website ini dibuat untuk menghadirkan kembali permainan masa kecil Indonesia ke era digital. Mainkan permainan tradisional favoritmu secara online langsung dari browser.
-          </p>
-
-          {/* Motivasi Box */}
-          <div className="bg-white/60 p-5 rounded-2xl border border-[#8B5E3C]/20 shadow-sm md:w-5/6 relative overflow-hidden">
-            <div className="absolute -right-4 -top-4 text-[#E39B4A] opacity-10">
-              <Heart className="w-24 h-24 fill-current" />
+    <!-- --- HERO SECTION --- -->
+    <section id="home" class="pt-32 pb-20 md:pt-40 md:pb-32 container mx-auto px-6 md:px-12 flex flex-col-reverse md:flex-row items-center gap-12">
+        <!-- Left Content -->
+        <div class="w-full md:w-1/2 flex flex-col items-start gap-6">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-orange/20 text-orange rounded-full font-bold text-sm">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-orange"></span>
+                </span>
+                Mainkan Secara Gratis!
             </div>
-            <div className="flex items-center gap-2 mb-2 relative z-10">
-              <Heart className="w-5 h-5 text-[#E39B4A] fill-[#E39B4A]" />
-              <h3 className="font-bold text-[#3E5C4A] text-lg">Motivasi</h3>
-            </div>
-            <p className="text-sm text-[#4A3B32] font-medium leading-relaxed relative z-10">
-              Banyak permainan tradisional mulai terlupakan. Proyek ini dibuat untuk menjaga nostalgia, budaya, dan keseruan permainan lokal agar tetap hidup dan dapat dimainkan generasi baru.
+            
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-green leading-tight">
+                Permainan Tradisional <br class="hidden lg:block"/>
+                <span class="text-brown">dalam Bentuk Digital</span>
+            </h2>
+            
+            <p class="text-lg text-brown font-semibold md:w-5/6 leading-relaxed">
+                Website ini dibuat untuk menghadirkan kembali permainan masa kecil Indonesia ke era digital. Mainkan permainan tradisional favoritmu secara online langsung dari browser.
             </p>
-          </div>
 
-          <button 
-            onClick={() => scrollToSection('games')}
-            className="group mt-4 bg-[#3E5C4A] hover:bg-[#2A4033] text-white px-8 py-4 rounded-full font-bold text-lg flex items-center gap-3 transition-all transform hover:-translate-y-1 hover:shadow-xl hover:shadow-[#3E5C4A]/30"
-          >
-            <Play className="w-6 h-6 fill-current group-hover:scale-110 transition-transform" />
-            Mulai Bermain
-          </button>
-        </div>
-
-        {/* Right Content / Image */}
-        <div className="w-full md:w-1/2 relative">
-          <div className="absolute inset-0 bg-[#E39B4A] rounded-full blur-3xl opacity-20 transform translate-x-10 translate-y-10"></div>
-          <div className="absolute inset-0 bg-[#3E5C4A] rounded-full blur-3xl opacity-20 transform -translate-x-10 -translate-y-10"></div>
-          <img 
-            src="https://cdn.antaranews.com/cache/1200x800/2021/12/10/child-gd62c3936d_1280.jpg" 
-            alt="Anak-anak bermain bahagia" 
-            className="relative z-10 w-full h-[350px] md:h-[500px] object-cover rounded-[3rem] shadow-2xl border-8 border-white/50 transform md:rotate-2 hover:rotate-0 transition-all duration-500"
-          />
-          {/* Floating Element */}
-          <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 z-20 flex items-center gap-3 animate-bounce">
-            <div className="bg-[#F5E6C8] p-3 rounded-full">
-              <Trophy className="text-[#E39B4A] w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 font-bold">Koleksi</p>
-              <p className="text-[#3E5C4A] font-black">4 Permainan</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* --- GAMES SECTION --- */}
-      <section id="games" className="py-20 bg-white/40">
-        <div className="container mx-auto px-6 md:px-12">
-          
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-[#3E5C4A] mb-4">Pilih Permainan & Mainkan Sekarang</h2>
-            <p className="text-[#8B5E3C] font-semibold text-lg">Geser atau klik panah untuk melihat permainan lainnya</p>
-          </div>
-
-          {/* Featured Game Carousel */}
-          <div className="relative max-w-5xl mx-auto mb-20">
-            {/* Arrows */}
-            <button 
-              onClick={prevSlide}
-              className="absolute left-0 md:-left-6 top-1/2 -translate-y-1/2 z-20 bg-white text-[#3E5C4A] p-3 rounded-full shadow-lg hover:bg-[#E39B4A] hover:text-white transition-colors"
-            >
-              <ChevronLeft className="w-8 h-8" />
-            </button>
-            <button 
-              onClick={nextSlide}
-              className="absolute right-0 md:-right-6 top-1/2 -translate-y-1/2 z-20 bg-white text-[#3E5C4A] p-3 rounded-full shadow-lg hover:bg-[#E39B4A] hover:text-white transition-colors"
-            >
-              <ChevronRight className="w-8 h-8" />
-            </button>
-
-            {/* Carousel Item */}
-            <div className="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-[#8B5E3C]/10 relative z-10 transition-all duration-500">
-              <div className="md:w-1/2 relative h-64 md:h-auto md:min-h-[400px]">
-                <img 
-                  src={gamesData[currentSlide].img} 
-                  alt={gamesData[currentSlide].title}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
-              <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-[#FDFBF7]">
-                <div className="mb-4 inline-flex p-3 bg-[#F5E6C8] rounded-xl text-[#8B5E3C]">
-                  {gamesData[currentSlide].icon}
+            <!-- Motivasi Box -->
+            <div class="bg-white/60 p-5 rounded-2xl border border-brown/20 shadow-sm md:w-5/6 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 text-orange opacity-10">
+                    <svg class="w-24 h-24 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                 </div>
-                <h3 className="text-3xl md:text-4xl font-black text-[#3E5C4A] mb-4 uppercase tracking-wide">
-                  {gamesData[currentSlide].title}
-                </h3>
-                <p className="text-lg text-[#8B5E3C] font-medium mb-8 leading-relaxed">
-                  {gamesData[currentSlide].desc}
+                <div class="flex items-center gap-2 mb-2 relative z-10">
+                    <svg class="w-5 h-5 text-orange fill-orange" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                    <h3 class="font-bold text-green text-lg">Motivasi</h3>
+                </div>
+                <p class="text-sm text-[#4A3B32] font-medium leading-relaxed relative z-10">
+                    Banyak permainan tradisional mulai terlupakan. Proyek ini dibuat untuk menjaga nostalgia, budaya, dan keseruan permainan lokal agar tetap hidup dan dapat dimainkan generasi baru.
                 </p>
-                <a 
-                  href={gamesData[currentSlide].url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="group self-start bg-[#8B5E3C] hover:bg-[#E39B4A] text-white px-8 py-3 rounded-xl font-bold text-lg transition-all flex items-center gap-2 shadow-lg shadow-[#8B5E3C]/30"
-                >
-                  Mainkan Sekarang
-                  <Play className="w-5 h-5 fill-current group-hover:translate-x-1 transition-transform" />
-                </a>
-              </div>
             </div>
 
-            {/* Indicators */}
-            <div className="flex justify-center mt-6 gap-2">
-              {gamesData.map((_, idx) => (
-                <button 
-                  key={idx}
-                  onClick={() => setCurrentSlide(idx)}
-                  className={`h-3 rounded-full transition-all ${currentSlide === idx ? 'w-10 bg-[#E39B4A]' : 'w-3 bg-[#8B5E3C]/30 hover:bg-[#8B5E3C]/50'}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Quick Access Grid - Permainan Lainnya */}
-          <div className="max-w-5xl mx-auto">
-            <h3 className="text-2xl font-black text-[#3E5C4A] mb-8 text-center border-b-2 border-[#8B5E3C]/10 pb-4 inline-block w-full">
-              Semua Permainan Tersedia
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {gamesData.map((game) => (
-                <a 
-                  key={game.id} 
-                  href={game.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 transform hover:-translate-y-2 flex flex-col"
-                >
-                  <div className="h-40 overflow-hidden relative">
-                    <div className="absolute inset-0 bg-[#3E5C4A]/20 group-hover:bg-transparent transition-colors z-10"></div>
-                    <img src={game.img} alt={game.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  </div>
-                  <div className="p-5 flex-1 flex flex-col">
-                    <h4 className="text-xl font-black text-[#3E5C4A] mb-2">{game.title}</h4>
-                    <p className="text-sm text-[#8B5E3C] font-medium leading-relaxed flex-1">{game.desc}</p>
-                    <div className="mt-4 text-[#E39B4A] font-bold text-sm flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      Mainkan <Play className="w-4 h-4 fill-current" />
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-
+            <a href="#games" class="group mt-4 bg-green hover:bg-[#2A4033] text-white px-8 py-4 rounded-full font-bold text-lg flex items-center gap-3 transition-all transform hover:-translate-y-1 hover:shadow-xl hover:shadow-green/30 inline-flex">
+                <svg class="w-6 h-6 fill-current group-hover:scale-110 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                Mulai Bermain
+            </a>
         </div>
-      </section>
 
-      {/* --- ABOUT SECTION --- */}
-      <section id="about" className="py-24 relative overflow-hidden">
-        {/* Background shapes */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/40 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#E39B4A]/10 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
-
-        <div className="container mx-auto px-6 md:px-12 relative z-10">
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-white flex flex-col md:flex-row items-center gap-12 max-w-5xl mx-auto">
-            
-            <div className="md:w-1/3 flex justify-center">
-              <div className="bg-[#F5E6C8] w-40 h-40 rounded-[2rem] flex items-center justify-center transform rotate-6 shadow-inner">
-                <Trophy className="w-20 h-20 text-[#E39B4A]" />
-              </div>
-            </div>
-
-            <div className="md:w-2/3">
-              <h2 className="text-3xl font-black text-[#3E5C4A] mb-6">Lebih dari Sekadar Game</h2>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="bg-[#E39B4A]/20 p-2 rounded-lg text-[#E39B4A]">
-                      <Gamepad2 className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-bold text-lg text-[#8B5E3C]">Pendekatan Sederhana</h4>
-                  </div>
-                  <p className="text-[#4A3B32] font-medium text-sm leading-relaxed">
-                    Semua game dibuat dengan pendekatan sederhana, ringan untuk dimainkan langsung di browser, namun tetap berusaha mempertahankan nuansa dan aturan lokal Indonesia.
-                  </p>
+        <!-- Right Content / Image -->
+        <div class="w-full md:w-1/2 relative">
+            <div class="absolute inset-0 bg-orange rounded-full blur-3xl opacity-20 transform translate-x-10 translate-y-10"></div>
+            <div class="absolute inset-0 bg-green rounded-full blur-3xl opacity-20 transform -translate-x-10 -translate-y-10"></div>
+            <img 
+                src="https://cdn.antaranews.com/cache/1200x800/2021/12/10/child-gd62c3936d_1280.jpg" 
+                alt="Anak-anak bermain bahagia" 
+                class="relative z-10 w-full h-[350px] md:h-[500px] object-cover rounded-[3rem] shadow-2xl border-8 border-white/50 transform md:rotate-2 hover:rotate-0 transition-all duration-500"
+            />
+            <!-- Floating Element -->
+            <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 z-20 flex items-center gap-3 animate-bounce">
+                <div class="bg-cream p-3 rounded-full">
+                    <svg class="text-orange w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
                 </div>
                 <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="bg-[#3E5C4A]/20 p-2 rounded-lg text-[#3E5C4A]">
-                      <Heart className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-bold text-lg text-[#8B5E3C]">Pelestarian Budaya</h4>
-                  </div>
-                  <p className="text-[#4A3B32] font-medium text-sm leading-relaxed">
-                    Tujuan utama proyek ini bukan hanya sekadar hiburan semata, tetapi juga sebagai bentuk pelestarian budaya permainan tradisional melalui media digital interaktif.
-                  </p>
+                    <p class="text-xs text-gray-500 font-bold">Koleksi</p>
+                    <p class="text-green font-black">4 Permainan</p>
                 </div>
-              </div>
             </div>
-
-          </div>
         </div>
-      </section>
+    </section>
 
-      {/* --- FOOTER --- */}
-      <footer className="bg-[#3E5C4A] pt-16 pb-8 text-white">
-        <div className="container mx-auto px-6 md:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-12 border-b border-white/10 pb-12">
-            
-            {/* Brand & Creator */}
-            <div className="text-center md:text-left">
-              <h2 className="text-3xl font-black mb-2 flex items-center justify-center md:justify-start gap-2">
-                <Gamepad2 className="w-8 h-8 text-[#E39B4A]" />
-                MainBareng
-              </h2>
-              <p className="text-white/70 font-medium mb-6 max-w-sm">
-                Menghidupkan kembali nostalgia masa kecil melalui permainan tradisional berbasis browser.
-              </p>
-              <div className="bg-white/10 p-4 rounded-xl inline-block text-left">
-                <p className="text-sm text-white/60 font-semibold mb-1">Dibuat oleh:</p>
-                <p className="font-bold text-lg text-[#E39B4A]">Yusup Hidayat Winata</p>
-                <p className="text-xs text-white/80">Independent Game Developer</p>
-                <p className="text-xs text-white/80">Creator of Digital Traditional Games Project</p>
-              </div>
+    <!-- --- GAMES SECTION --- -->
+    <section id="games" class="py-20 bg-white/40">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-black text-green mb-4">Pilih Permainan & Mainkan Sekarang</h2>
+                <p class="text-brown font-semibold text-lg">Geser atau klik panah untuk melihat permainan lainnya</p>
             </div>
 
-            {/* Links */}
-            <div className="flex flex-col items-center md:items-end gap-4">
-              <h4 className="font-bold text-lg mb-2">Connect & Play</h4>
-              <a 
-                href="https://github.com/yusupwinata" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors w-full md:w-auto font-semibold"
-              >
-                <Github className="w-5 h-5" />
-                GitHub Profile
-              </a>
-              <a 
-                href="mailto:yusuphidayatwinata@gmail.com" 
-                className="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors w-full md:w-auto font-semibold"
-              >
-                <Mail className="w-5 h-5" />
-                Contact me
-              </a>
+            <!-- Featured Game Carousel -->
+            <div class="relative max-w-5xl mx-auto mb-20">
+                <!-- Arrows -->
+                <button onclick="prevSlide()" class="absolute left-0 md:-left-6 top-1/2 -translate-y-1/2 z-20 bg-white text-green p-3 rounded-full shadow-lg hover:bg-orange hover:text-white transition-colors">
+                    <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <button onclick="nextSlide()" class="absolute right-0 md:-right-6 top-1/2 -translate-y-1/2 z-20 bg-white text-green p-3 rounded-full shadow-lg hover:bg-orange hover:text-white transition-colors">
+                    <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+
+                <!-- Carousel Item -->
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-brown/10 relative z-10 transition-all duration-500">
+                    <div class="md:w-1/2 relative h-64 md:h-auto md:min-h-[400px]">
+                        <img id="carousel-img" src="" alt="Game Image" class="absolute inset-0 w-full h-full object-cover"/>
+                    </div>
+                    <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-[#FDFBF7]">
+                        <div class="mb-4 inline-flex p-3 bg-cream rounded-xl text-brown" id="carousel-icon">
+                            <!-- Icon disuntik dari JS -->
+                        </div>
+                        <h3 id="carousel-title" class="text-3xl md:text-4xl font-black text-green mb-4 uppercase tracking-wide">
+                            Judul
+                        </h3>
+                        <p id="carousel-desc" class="text-lg text-brown font-medium mb-8 leading-relaxed">
+                            Deskripsi
+                        </p>
+                        <a id="carousel-link" href="#" target="_blank" rel="noopener noreferrer" class="group self-start bg-brown hover:bg-orange text-white px-8 py-3 rounded-xl font-bold text-lg transition-all flex items-center gap-2 shadow-lg shadow-brown/30">
+                            Mainkan Sekarang
+                            <svg class="w-5 h-5 fill-current group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Indicators -->
+                <div class="flex justify-center mt-6 gap-2" id="carousel-indicators">
+                    <!-- Dots disuntik dari JS -->
+                </div>
             </div>
 
-          </div>
-
-          <div className="text-center text-white/50 text-sm font-semibold">
-            &copy; {new Date().getFullYear()} MainBareng - All Rights Reserved.
-          </div>
+            <!-- Quick Access Grid -->
+            <div class="max-w-5xl mx-auto">
+                <h3 class="text-2xl font-black text-green mb-8 text-center border-b-2 border-brown/10 pb-4 inline-block w-full">
+                    Semua Permainan Tersedia
+                </h3>
+                <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <!-- Cards disuntik dari JS -->
+                </div>
+            </div>
         </div>
-      </footer>
+    </section>
 
-    </div>
-  );
-}
+    <!-- --- ABOUT SECTION --- -->
+    <section id="about" class="py-24 relative overflow-hidden">
+        <!-- Background shapes -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/40 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-orange/10 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
+
+        <div class="container mx-auto px-6 md:px-12 relative z-10">
+            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-white flex flex-col md:flex-row items-center gap-12 max-w-5xl mx-auto">
+                
+                <div class="md:w-1/3 flex justify-center">
+                    <div class="bg-cream w-40 h-40 rounded-[2rem] flex items-center justify-center transform rotate-6 shadow-inner">
+                        <svg class="w-20 h-20 text-orange" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                    </div>
+                </div>
+
+                <div class="md:w-2/3">
+                    <h2 class="text-3xl font-black text-green mb-6">Lebih dari Sekadar Game</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="bg-orange/20 p-2 rounded-lg text-orange">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+                                </div>
+                                <h4 class="font-bold text-lg text-brown">Pendekatan Sederhana</h4>
+                            </div>
+                            <p class="text-[#4A3B32] font-medium text-sm leading-relaxed">
+                                Semua game dibuat dengan pendekatan sederhana, ringan untuk dimainkan langsung di browser, namun tetap berusaha mempertahankan nuansa dan aturan lokal Indonesia.
+                            </p>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="bg-green/20 p-2 rounded-lg text-green">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                </div>
+                                <h4 class="font-bold text-lg text-brown">Pelestarian Budaya</h4>
+                            </div>
+                            <p class="text-[#4A3B32] font-medium text-sm leading-relaxed">
+                                Tujuan utama proyek ini bukan hanya sekadar hiburan semata, tetapi juga sebagai bentuk pelestarian budaya permainan tradisional melalui media digital interaktif.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- --- FOOTER --- -->
+    <footer class="bg-green pt-16 pb-8 text-white">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12 border-b border-white/10 pb-12">
+                
+                <!-- Brand & Creator -->
+                <div class="text-center md:text-left">
+                    <h2 class="text-3xl font-black mb-2 flex items-center justify-center md:justify-start gap-2">
+                        <svg class="w-8 h-8 text-orange" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+                        MainBareng
+                    </h2>
+                    <p class="text-white/70 font-medium mb-6 max-w-sm">
+                        Menghidupkan kembali nostalgia masa kecil melalui permainan tradisional berbasis browser.
+                    </p>
+                    <div class="bg-white/10 p-4 rounded-xl inline-block text-left">
+                        <p class="text-sm text-white/60 font-semibold mb-1">Dibuat oleh:</p>
+                        <p class="font-bold text-lg text-orange">Yusup Hidayat Winata</p>
+                        <p class="text-xs text-white/80">Independent Game Developer</p>
+                        <p class="text-xs text-white/80">Creator of Digital Traditional Games Project</p>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div class="flex flex-col items-center md:items-end gap-4">
+                    <h4 class="font-bold text-lg mb-2">Connect & Play</h4>
+                    <a href="https://github.com/yusupwinata" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors w-full md:w-auto font-semibold">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                        GitHub Profile
+                    </a>
+                    <a href="mailto:yusuphidayatwinata@gmail.com" class="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors w-full md:w-auto font-semibold">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        Contact me
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="text-center text-white/50 text-sm font-semibold">
+                &copy; <span id="year"></span> MainBareng - All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- --- JAVASCRIPT --- -->
+    <script>
+        // Update Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Data Permainan & Icon SVGs
+        const iconTarget = `<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`;
+        const iconPlay = `<svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>`;
+        const iconTrophy = `<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`;
+
+        const gamesData = [
+            {
+                id: 1,
+                title: 'Congklak',
+                desc: 'Permainan strategi klasik untuk mengumpulkan biji terbanyak di lumbungmu.',
+                url: 'https://yusupwinata.github.io/congklak-the-game/',
+                img: 'https://www.ibudanbalita.com/uploads/medias/CDLlhopzroUY.jpg',
+                icon: iconTarget
+            },
+            {
+                id: 2,
+                title: 'Bekel',
+                desc: 'Latih refleks dan timing dengan permainan bola bekel dan biji kuningan.',
+                url: 'https://yusupwinata.github.io/bekel-the-game/',
+                img: 'https://i.ytimg.com/vi/cWEd7NdBZ_s/maxresdefault.jpg',
+                icon: iconPlay
+            },
+            {
+                id: 3,
+                title: 'Karambol',
+                desc: 'Masukkan bidak ke lubang dengan akurasi dan perhitungan pantulan terbaik.',
+                url: 'https://yusupwinata.github.io/karambol-the-game/',
+                img: 'https://asset.kompas.com/crops/5ydCiu77cg0CgPLsO7IeuzT-nWg=/106x0:1258x768/1200x800/data/photo/2022/06/24/62b567e6ccd57.png',
+                icon: iconTarget
+            },
+            {
+                id: 4,
+                title: 'Damdaman',
+                desc: 'Permainan strategi tradisional penuh taktik ala catur lokal Indonesia.',
+                url: 'https://yusupwinata.github.io/damdaman-the-game/',
+                img: 'https://tgrcampaign.com/media_library/posts/large/fbe8695a5b67c6a4be6fd1a4f60e0693.jpeg',
+                icon: iconTrophy
+            }
+        ];
+
+        // --- Render Games Grid ---
+        const gridContainer = document.getElementById('games-grid');
+        gridContainer.innerHTML = gamesData.map(game => `
+            <a href="${game.url}" target="_blank" rel="noopener noreferrer" class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 transform hover:-translate-y-2 flex flex-col">
+                <div class="h-40 overflow-hidden relative">
+                    <div class="absolute inset-0 bg-green/20 group-hover:bg-transparent transition-colors z-10"></div>
+                    <img src="${game.img}" alt="${game.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                </div>
+                <div class="p-5 flex-1 flex flex-col">
+                    <h4 class="text-xl font-black text-green mb-2">${game.title}</h4>
+                    <p class="text-sm text-brown font-medium leading-relaxed flex-1">${game.desc}</p>
+                    <div class="mt-4 text-orange font-bold text-sm flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        Mainkan ${iconPlay}
+                    </div>
+                </div>
+            </a>
+        `).join('');
+
+
+        // --- Carousel Logic ---
+        let currentSlide = 0;
+        
+        function renderCarousel() {
+            const game = gamesData[currentSlide];
+            document.getElementById('carousel-img').src = game.img;
+            document.getElementById('carousel-img').alt = game.title;
+            document.getElementById('carousel-title').textContent = game.title;
+            document.getElementById('carousel-desc').textContent = game.desc;
+            document.getElementById('carousel-link').href = game.url;
+            document.getElementById('carousel-icon').innerHTML = game.icon;
+
+            // Render Indicators
+            const indicatorsContainer = document.getElementById('carousel-indicators');
+            indicatorsContainer.innerHTML = gamesData.map((_, idx) => `
+                <button onclick="goToSlide(${idx})" class="h-3 rounded-full transition-all ${idx === currentSlide ? 'w-10 bg-orange' : 'w-3 bg-brown/30 hover:bg-brown/50'}"></button>
+            `).join('');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % gamesData.length;
+            renderCarousel();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + gamesData.length) % gamesData.length;
+            renderCarousel();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            renderCarousel();
+        }
+
+        // Initialize Carousel
+        renderCarousel();
+
+
+        // --- Navbar & Mobile Menu Logic ---
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('bg-cream/90', 'backdrop-blur-md', 'shadow-md', 'py-3');
+                navbar.classList.remove('bg-transparent', 'py-5');
+            } else {
+                navbar.classList.add('bg-transparent', 'py-5');
+                navbar.classList.remove('bg-cream/90', 'backdrop-blur-md', 'shadow-md', 'py-3');
+            }
+        });
+
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconMenu = document.getElementById('icon-menu');
+        const iconClose = document.getElementById('icon-close');
+        
+        function toggleMenu() {
+            mobileMenu.classList.toggle('hidden');
+            iconMenu.classList.toggle('hidden');
+            iconClose.classList.toggle('hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // Close mobile menu when a link is clicked
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (!mobileMenu.classList.contains('hidden')) {
+                    toggleMenu();
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
